@@ -9,6 +9,7 @@ __pycache__/
 
 # ChromaDB / runtime data
 hermes_memory/
+backup/
 *.db
 *.sqlite
 
