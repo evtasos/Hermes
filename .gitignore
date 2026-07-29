@@ -1,0 +1,21 @@
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ChromaDB / runtime data
+hermes_memory/
+*.db
+*.sqlite
+
+# Logs / dumps
+*.log
+tools_dump.json
+
+# IDE
+.vscode/
+.idea/
