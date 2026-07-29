@@ -1,3 +1,4 @@
+# version 0.3
 import asyncio, os, json
 import httpx, chromadb
 from datetime import datetime
