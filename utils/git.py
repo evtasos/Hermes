@@ -1,8 +1,12 @@
 import subprocess
-import os
 from pathlib import Path
 
-REPO_PATH = Path(__file__).parent.resolve()
+# NOTE: this file now lives one level deeper (hermes-agent/utils/git.py
+# instead of hermes-agent/git_manager.py), so REPO_PATH needs an extra
+# .parent to still point at the repo root - Path(__file__).parent alone
+# would resolve to utils/ and every git command below would silently
+# run against the wrong directory.
+REPO_PATH = Path(__file__).parent.parent.resolve()
 REMOTE_NAME = "origin"
 BRANCH = "main"
 
@@ -35,14 +39,14 @@ def git_pull() -> str:
     """Pull latest code from remote."""
     # Stash any local changes first (to avoid merge conflicts)
     _run(["git", "stash"])
-    
+
     out, err, rc = _run(["git", "pull", REMOTE_NAME, BRANCH])
     if rc != 0:
         return f"Pull failed: {err}"
-    
+
     # Pop stash if we had local changes
     _run(["git", "stash", "pop"])
-    
+
     return f"Pulled successfully:\n{out}"
 
 
@@ -50,17 +54,17 @@ def git_push(message: str = "Agent update") -> str:
     """Push local changes to remote."""
     # Add all changes
     _run(["git", "add", "-A"])
-    
+
     # Commit
     out, err, rc = _run(["git", "commit", "-m", message])
     if rc != 0 and "nothing to commit" not in err.lower():
         return f"Commit failed: {err}"
-    
+
     # Push
     out, err, rc = _run(["git", "push", REMOTE_NAME, BRANCH])
     if rc != 0:
         return f"Push failed: {err}"
-    
+
     return f"Pushed successfully:\n{out}"
 
 

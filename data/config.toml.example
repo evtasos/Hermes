@@ -1,0 +1,38 @@
+# Example Hermes configuration.
+# Copy to config.toml and override as needed.
+
+[ha]
+mcp_url = "http://homeassistant.local:9584"
+token = "YOUR_LONG_LIVED_ACCESS_TOKEN"
+
+[llm]
+# Primary provider: Gemini (free). Leave empty to use env.
+# api_key = ""  # set via GEMINI_API_KEY env var
+# Fallback order is defined in code; you can override OLLAMA_MODEL here.
+ollama_host = "http://192.168.1.90:11434"
+ollama_model = "phi3:mini"
+
+# Optional: OpenRouter (unreliable tool support)
+# openrouter_api_key = ""
+# openrouter_model = "openrouter/free"
+
+[memory]
+path = "./hermes_memory"
+embedding_model = "all-MiniLM-L6-v2"
+fact_dedup_threshold = 0.88
+max_conversation_turns = 20
+
+[safety]
+require_write_confirmation = true
+
+[observability]
+log_turns = true
+log_file = "./hermes_turns.jsonl"
+
+[git]
+auto_pull_on_start = true
+remote = "origin"
+branch = "main"
+
+[debug]
+enabled = false

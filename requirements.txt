@@ -1,0 +1,17 @@
+# Hermes dependencies
+# Core
+sentence-transformers>=2.2.0
+chromadb>=0.4.0
+httpx>=0.25.0
+structlog>=23.0.0
+python-dotenv>=1.0.0
+
+# MCP
+mcp>=1.0.0
+
+# ML/Embeddings
+scikit-learn>=1.3.0
+numpy>=1.24.0
+
+# Optional: for config.toml parsing if you switch from env vars
+# toml>=0.10.0

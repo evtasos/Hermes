@@ -32,6 +32,7 @@ Assistant: {assistant_msg}
 
 Output ONLY a JSON array like: ["fact 1", "fact 2"]"""
 
+
 async def extract_facts(user_msg: str, assistant_msg: str, llm_caller) -> list[str]:
     prompt = FACT_EXTRACTION_PROMPT.format(user_msg=user_msg, assistant_msg=assistant_msg)
     messages = [
@@ -40,14 +41,14 @@ async def extract_facts(user_msg: str, assistant_msg: str, llm_caller) -> list[s
     ]
     response = await llm_caller(messages, tools=None)
     content = response.get("content", "").strip()
-    
+
     try:
         facts = json.loads(content)
         if isinstance(facts, list):
             return [str(f).strip() for f in facts if f and len(str(f).strip()) > 5]
     except json.JSONDecodeError:
         pass
-    
+
     lines = [l.strip().strip('"').strip("'").strip("- ").strip("* ").strip("→ ").strip("[]")
              for l in content.split("\n") if l.strip()]
     facts = [l for l in lines if len(l) > 10 and not l.lower().startswith(("here", "output", "json", "fact", "user:", "assistant:", "extract"))]
