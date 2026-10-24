@@ -7,7 +7,12 @@ structlog>=23.0.0
 python-dotenv>=1.0.0
 
 # MCP
-mcp>=1.0.0
+# Pinned below v2: v2 removed streamablehttp_client (renamed
+# streamable_http_client), changed its return from a 3-tuple to a 2-tuple,
+# and moved auth out of the `headers=` kwarg into an httpx.AsyncClient - all
+# three would break hermes_mcp/manager.py as written. Migrate deliberately
+# if/when you want v2, don't let it happen via an unpinned upgrade.
+mcp>=1.0.0,<2.0.0
 
 # ML/Embeddings
 scikit-learn>=1.3.0

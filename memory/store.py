@@ -3,30 +3,26 @@ ChromaDB wrapper for conversations and facts.
 """
 import uuid
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional, List
 
 import chromadb
-from sentence_transformers import SentenceTransformer
 import structlog
 
-from config import MEMORY_PATH, EMBEDDING_MODEL, MAX_CONVERSATION_TURNS
+from config import MEMORY_PATH, MAX_CONVERSATION_TURNS
+from memory.embedder import get_embedder
 
 logger = structlog.get_logger()
 
-# Embedder singleton (loaded once)
-_embedder: Optional[SentenceTransformer] = None
-
-
-def get_embedder() -> SentenceTransformer:
-    global _embedder
-    if _embedder is None:
-        logger.info("loading_embedder", model=EMBEDDING_MODEL)
-        _embedder = SentenceTransformer(EMBEDDING_MODEL)
-    return _embedder
+# Chroma client singleton - previously reconnected on every single
+# remember()/recall()/store_fact() call.
+_chroma_client: Optional[chromadb.PersistentClient] = None
 
 
 def get_chroma_client() -> chromadb.PersistentClient:
-    return chromadb.PersistentClient(path=str(MEMORY_PATH))
+    global _chroma_client
+    if _chroma_client is None:
+        _chroma_client = chromadb.PersistentClient(path=str(MEMORY_PATH))
+    return _chroma_client
 
 
 def get_or_create_collection(name: str):

@@ -11,6 +11,7 @@ from llm.router import get_llm_response
 from memory.store import store_fact, get_all_facts
 from memory.dedup import is_duplicate_fact
 from memory.embedder import get_embedder
+from config import FACT_DEDUP_THRESHOLD
 
 logger = structlog.get_logger()
 
@@ -76,7 +77,9 @@ async def extract_and_store_facts(
             fact_str = str(fact).strip()
             if not fact_str or len(fact_str) < 5:
                 continue
-            if not is_duplicate_fact(fact_str, existing_facts, embedder):
+            if not is_duplicate_fact(
+                fact_str, existing_facts, embedder, similarity_threshold=FACT_DEDUP_THRESHOLD
+            ):
                 store_fact(fact_str)
                 existing_facts.append(fact_str)
 
